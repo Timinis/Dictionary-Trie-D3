@@ -10,16 +10,54 @@ export default (svgComponent, nodesArray, edgesArray) => {
     .force('charge', D3.forceManyBody())
     .force('center', D3.forceCenter(width / 2, height / 2));
 
-  const node = svg
+  const drag = simulation => {
+    const dragstarted = d => {
+      if (!D3.event.active) simulation.alphaTarget(0.3).restart();
+      d.fx = d.x;
+      d.fy = d.y;
+    };
+
+    const dragged = d => {
+      d.fx = D3.event.x;
+      d.fy = D3.event.y;
+    };
+
+    const dragended = d => {
+      if (!D3.event.active) simulation.alphaTarget(0);
+      d.fx = null;
+      d.fy = null;
+    };
+
+    return D3.drag()
+      .on('start', dragstarted)
+      .on('drag', dragged)
+      .on('end', dragended);
+  };
+
+  let randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
+
+  let node = svg
     .append('g')
     .attr('stroke', '#fff')
     .attr('stroke-width', 1.5)
     .selectAll('circle')
     .data(nodesArray)
     .join('circle')
-    .attr('r', 5);
+    .attr('r', 6)
+    .style('fill', randomColor)
+    .call(drag(simulation));
 
-  const link = svg
+  let text = svg
+    .append('g')
+    .attr('stroke', '#999')
+    .selectAll('text')
+    .data(nodesArray)
+    .join('text')
+    .text(function(d) {
+      return d.id;
+    });
+
+  let link = svg
     .append('g')
     .attr('stroke', '#999')
     .attr('stroke-opacity', 0.6)
@@ -27,14 +65,68 @@ export default (svgComponent, nodesArray, edgesArray) => {
     .data(edgesArray)
     .join('line')
     .attr('stroke-width', d => Math.sqrt(d.value));
-  console.log(link);
 
   simulation.on('tick', () => {
+    node.attr('cx', d => d.x).attr('cy', d => d.y);
+    text.attr('x', d => d.x + 10).attr('dy', d => d.y);
+
     link
       .attr('x1', d => d.source.x)
       .attr('y1', d => d.source.y)
       .attr('x2', d => d.target.x)
       .attr('y2', d => d.target.y);
-    node.attr('cx', d => d.x).attr('cy', d => d.y);
   });
+
+  const restart = () => {
+    // Apply the general update pattern to the nodes.
+    node = node.data(nodesArray, d => {
+      return d.id;
+    });
+    node.exit().remove();
+    node = node
+      .enter()
+      .append('circle')
+      .attr('r', 6)
+      .style('fill', randomColor)
+      .merge(node)
+      .call(drag(simulation));
+
+    // Apply the general update pattern to the links.
+    link = link.data(edgesArray, d => {
+      return d.source.id + '-' + d.target.id;
+    });
+    link.exit().remove();
+    link = link
+      .enter()
+      .append('line')
+      .merge(link);
+
+    // Update and restart the simulation.
+    simulation.nodes(nodesArray);
+    simulation.force('link').links(edgesArray);
+    simulation.alpha(1).restart();
+  };
+
+  D3.interval(
+    () => {
+      if (nodesArray.length < 20) {
+        let randomGenerated = Math.random().toString();
+        let randomTarget = Math.floor(Math.random() * nodesArray.length) - 1;
+        if (randomTarget === -1) {
+          randomTarget = 0;
+        }
+
+        nodesArray.push({ id: randomGenerated, group: '1' });
+        edgesArray.push({
+          source: randomGenerated,
+          value: '1',
+          target: nodesArray[randomTarget].id
+        });
+
+        restart();
+      }
+    },
+    2000,
+    D3.now()
+  );
 };

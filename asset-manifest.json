@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/Dictionary-Trie-D3/static/css/main.795991f2.chunk.css",
-    "main.js": "/Dictionary-Trie-D3/static/js/main.8ed6c1b9.chunk.js",
-    "main.js.map": "/Dictionary-Trie-D3/static/js/main.8ed6c1b9.chunk.js.map",
+    "main.js": "/Dictionary-Trie-D3/static/js/main.2de682dd.chunk.js",
+    "main.js.map": "/Dictionary-Trie-D3/static/js/main.2de682dd.chunk.js.map",
     "runtime~main.js": "/Dictionary-Trie-D3/static/js/runtime~main.25e4b857.js",
     "runtime~main.js.map": "/Dictionary-Trie-D3/static/js/runtime~main.25e4b857.js.map",
     "static/js/2.acb1ad26.chunk.js": "/Dictionary-Trie-D3/static/js/2.acb1ad26.chunk.js",
     "static/js/2.acb1ad26.chunk.js.map": "/Dictionary-Trie-D3/static/js/2.acb1ad26.chunk.js.map",
     "index.html": "/Dictionary-Trie-D3/index.html",
-    "precache-manifest.e35c7a4cf03f218fbb6bc4bfdaf3856b.js": "/Dictionary-Trie-D3/precache-manifest.e35c7a4cf03f218fbb6bc4bfdaf3856b.js",
+    "precache-manifest.ff8130cf22d91b727ff12531f6e215cd.js": "/Dictionary-Trie-D3/precache-manifest.ff8130cf22d91b727ff12531f6e215cd.js",
     "service-worker.js": "/Dictionary-Trie-D3/service-worker.js",
     "static/css/main.795991f2.chunk.css.map": "/Dictionary-Trie-D3/static/css/main.795991f2.chunk.css.map"
   }

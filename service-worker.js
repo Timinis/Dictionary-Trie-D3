@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/Dictionary-Trie-D3/precache-manifest.836a0d2b041f1a74c71aeec0d3ca0f88.js"
+  "/Dictionary-Trie-D3/precache-manifest.a2e20e632da5706fe7929013775b24be.js"
 );
 
 self.addEventListener('message', (event) => {

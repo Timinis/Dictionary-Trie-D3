@@ -1,14 +1,17 @@
 import * as D3 from 'd3';
 
-export default (svgComponent, nodesArray, edgesArray, onLabels) => {
+let state = { needUpdate: false };
+
+const initializer = (svgComponent, nodesArray, edgesArray, onLabels) => {
+  state = { ...state, nodes: nodesArray, edges: edgesArray };
   let svg = D3.select(svgComponent),
     width = window.outerWidth,
     height = window.outerHeight;
 
-  const simulation = D3.forceSimulation(nodesArray)
+  const simulation = D3.forceSimulation(state.nodes)
     .force(
       'link',
-      D3.forceLink(edgesArray)
+      D3.forceLink(state.edges)
         .distance(width / 20)
         .id(d => d.id)
     )
@@ -46,7 +49,7 @@ export default (svgComponent, nodesArray, edgesArray, onLabels) => {
     .attr('stroke', '#fff')
     .attr('stroke-width', 1.5)
     .selectAll('circle')
-    .data(nodesArray)
+    .data(state.nodes)
     .join('circle')
     .attr('r', 10)
     .style('fill', themeColor)
@@ -56,7 +59,7 @@ export default (svgComponent, nodesArray, edgesArray, onLabels) => {
     .append('g')
     .attr('stroke', '#999')
     .selectAll('text')
-    .data(nodesArray)
+    .data(state.nodes)
     .join('text')
     .text(function(d) {
       return d.id;
@@ -67,7 +70,7 @@ export default (svgComponent, nodesArray, edgesArray, onLabels) => {
     .attr('stroke', '#999')
     .attr('stroke-opacity', 0.6)
     .selectAll('line')
-    .data(edgesArray)
+    .data(state.edges)
     .join('line')
     .attr('stroke-width', d => Math.sqrt(d.value));
 
@@ -86,7 +89,7 @@ export default (svgComponent, nodesArray, edgesArray, onLabels) => {
 
   const restart = () => {
     // Apply the general update pattern to the nodes.
-    node = node.data(nodesArray, d => {
+    node = node.data(state.nodes, d => {
       return d.id;
     });
     node.exit().remove();
@@ -99,7 +102,7 @@ export default (svgComponent, nodesArray, edgesArray, onLabels) => {
       .call(drag(simulation));
 
     // Apply the general update pattern to the links.
-    link = link.data(edgesArray, d => {
+    link = link.data(state.edges, d => {
       return d.source.id + '-' + d.target.id;
     });
     link.exit().remove();
@@ -108,7 +111,7 @@ export default (svgComponent, nodesArray, edgesArray, onLabels) => {
       .append('line')
       .merge(link);
     if (onLabels) {
-      text = text.data(nodesArray, d => {
+      text = text.data(state.nodes, d => {
         return d.id;
       });
       text.exit().remove();
@@ -123,43 +126,25 @@ export default (svgComponent, nodesArray, edgesArray, onLabels) => {
     }
 
     // Update and restart the simulation.
-    simulation.nodes(nodesArray);
-    simulation.force('link').links(edgesArray);
+    simulation.nodes(state.nodes);
+    simulation.force('link').links(state.edges);
     simulation.alpha(1).restart();
   };
 
   D3.interval(
     () => {
-      if (nodesArray.length < 15) {
-        let randomGenerated = Math.random().toString();
-        let randomTarget = Math.floor(Math.random() * nodesArray.length) - 1;
-        if (randomTarget === -1) {
-          randomTarget = 0;
-        }
-        let otherRandom = Math.floor(Math.random() * nodesArray.length) - 1;
-        if (otherRandom === -1) {
-          otherRandom = 0;
-        }
-
-        nodesArray.push({ id: randomGenerated, group: '1' });
-        edgesArray.push({
-          source: randomGenerated,
-          value: '1',
-          target: nodesArray[randomTarget].id
-        });
-        edgesArray.push({
-          source: nodesArray[otherRandom].id,
-          value: '1',
-          target: nodesArray[randomTarget].id
-        });
-
+      if (state.needUpdate) {
+        state = { ...state, needUpdate: false };
         restart();
       }
     },
-    2000,
+    1,
     D3.now()
   );
-  if (nodesArray.length > 4) {
-    console.log('WOAH');
-  }
 };
+
+const updater = (nodesArray, edgesArray) => {
+  state = { ...state, nodes: nodesArray, edges: edgesArray, needUpdate: true };
+};
+
+export { initializer, updater };

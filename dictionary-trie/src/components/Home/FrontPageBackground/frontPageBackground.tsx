@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import svgMounter from './frontPageD3.js';
 
 class SvgComponent extends Component {
-  constructor(props: any) {
-    super(props);
-  }
   componentDidMount = () => {
     const nodesArray = [{ id: 'a' }, { id: 'b' }, { id: 'c' }, { id: 'd' }];
     const edgesArray = [

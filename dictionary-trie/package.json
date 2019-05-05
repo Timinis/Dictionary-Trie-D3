@@ -2,10 +2,13 @@
   "name": "dictionary-trie",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://timinis.github.io/Dictionary-Trie-D3/",
   "dependencies": {
     "@types/d3": "^5.7.2",
     "@types/react": "^16.8.15",
     "d3": "^5.9.2",
+    "gh-pages": "^2.0.1",
+    "node-sass": "^4.12.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.0",
@@ -16,7 +19,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"

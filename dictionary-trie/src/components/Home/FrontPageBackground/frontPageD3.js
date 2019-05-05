@@ -6,9 +6,14 @@ export default (svgComponent, nodesArray, edgesArray, onLabels) => {
     height = window.outerHeight;
 
   const simulation = D3.forceSimulation(nodesArray)
-    .force('link', D3.forceLink(edgesArray).id(d => d.id))
+    .force(
+      'link',
+      D3.forceLink(edgesArray)
+        .distance(width / 20)
+        .id(d => d.id)
+    )
     .force('charge', D3.forceManyBody())
-    .force('center', D3.forceCenter(width / 2, height / 2));
+    .force('center', D3.forceCenter(width * 0.6, height / 2));
 
   const drag = simulation => {
     const dragstarted = d => {
@@ -34,7 +39,7 @@ export default (svgComponent, nodesArray, edgesArray, onLabels) => {
       .on('end', dragended);
   };
 
-  let randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
+  let themeColor = '#4D6E9B';
 
   let node = svg
     .append('g')
@@ -43,8 +48,8 @@ export default (svgComponent, nodesArray, edgesArray, onLabels) => {
     .selectAll('circle')
     .data(nodesArray)
     .join('circle')
-    .attr('r', 6)
-    .style('fill', randomColor)
+    .attr('r', 10)
+    .style('fill', themeColor)
     .call(drag(simulation));
 
   let text = svg
@@ -88,8 +93,8 @@ export default (svgComponent, nodesArray, edgesArray, onLabels) => {
     node = node
       .enter()
       .append('circle')
-      .attr('r', 6)
-      .style('fill', randomColor)
+      .attr('r', 10)
+      .style('fill', themeColor)
       .merge(node)
       .call(drag(simulation));
 
@@ -125,16 +130,25 @@ export default (svgComponent, nodesArray, edgesArray, onLabels) => {
 
   D3.interval(
     () => {
-      if (nodesArray.length < 20) {
+      if (nodesArray.length < 30) {
         let randomGenerated = Math.random().toString();
         let randomTarget = Math.floor(Math.random() * nodesArray.length) - 1;
         if (randomTarget === -1) {
           randomTarget = 0;
         }
+        let otherRandom = Math.floor(Math.random() * nodesArray.length) - 1;
+        if (otherRandom === -1) {
+          otherRandom = 0;
+        }
 
         nodesArray.push({ id: randomGenerated, group: '1' });
         edgesArray.push({
           source: randomGenerated,
+          value: '1',
+          target: nodesArray[randomTarget].id
+        });
+        edgesArray.push({
+          source: nodesArray[otherRandom].id,
           value: '1',
           target: nodesArray[randomTarget].id
         });

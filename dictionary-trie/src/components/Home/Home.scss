@@ -1,0 +1,57 @@
+.landing {
+  z-index: 1;
+  font-family: 'Courier New', Courier, monospace;
+  position: fixed;
+  top: 40vh;
+  left: 8vw;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none;
+  h1 {
+    font-weight: bold;
+    font-size: 50px;
+    margin-bottom: 3vh;
+    color: #404040;
+    @keyframes blink {
+      50% {
+        color: transparent;
+      }
+    }
+    .loader__dot {
+      animation: 1s blink infinite;
+    }
+    .loader__dot:nth-child(2) {
+      animation-delay: 250ms;
+    }
+    .loader__dot:nth-child(3) {
+      animation-delay: 500ms;
+    }
+  }
+  h2 {
+    font-size: 18px;
+    margin-bottom: 3vh;
+  }
+  button {
+    background-color: #9aced2; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 6px;
+    outline: none;
+  }
+  button:hover {
+    background-color: #00887a;
+  }
+}
+svg {
+  z-index: 0;
+  position: absolute;
+}

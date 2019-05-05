@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { HashRouter, Route } from 'react-router-dom';
 import Home from './components/Home/Home';
+import './reset.scss';
 
 class App extends Component {
   constructor(props) {

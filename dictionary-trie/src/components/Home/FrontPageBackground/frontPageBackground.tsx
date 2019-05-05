@@ -13,7 +13,7 @@ class SvgComponent extends Component {
       { source: 'd', value: 1, target: 'b' }
     ];
     const svg = document.getElementById('directed-background');
-    svgMounter(svg, nodesArray, edgesArray);
+    svgMounter(svg, nodesArray, edgesArray, false);
   };
 
   render() {

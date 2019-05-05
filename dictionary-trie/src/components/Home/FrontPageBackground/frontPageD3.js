@@ -1,6 +1,6 @@
 import * as D3 from 'd3';
 
-export default (svgComponent, nodesArray, edgesArray) => {
+export default (svgComponent, nodesArray, edgesArray, onLabels) => {
   let svg = D3.select(svgComponent),
     width = window.outerWidth,
     height = window.outerHeight;
@@ -67,8 +67,10 @@ export default (svgComponent, nodesArray, edgesArray) => {
     .attr('stroke-width', d => Math.sqrt(d.value));
 
   simulation.on('tick', () => {
+    if (onLabels) {
+      text.attr('x', d => d.x + 10).attr('dy', d => d.y);
+    }
     node.attr('cx', d => d.x).attr('cy', d => d.y);
-    text.attr('x', d => d.x + 10).attr('dy', d => d.y);
 
     link
       .attr('x1', d => d.source.x)
@@ -100,6 +102,20 @@ export default (svgComponent, nodesArray, edgesArray) => {
       .enter()
       .append('line')
       .merge(link);
+    if (onLabels) {
+      text = text.data(nodesArray, d => {
+        return d.id;
+      });
+      text.exit().remove();
+      text = text
+        .enter()
+        .append('text')
+        .text(function(d) {
+          return d.id;
+        })
+        .merge(text)
+        .call(drag(simulation));
+    }
 
     // Update and restart the simulation.
     simulation.nodes(nodesArray);

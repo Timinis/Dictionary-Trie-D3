@@ -5,8 +5,8 @@ let state = { needUpdate: false };
 const initializer = (svgComponent, nodesArray, edgesArray, onLabels) => {
   state = { ...state, nodes: nodesArray, edges: edgesArray };
   let svg = D3.select(svgComponent),
-    width = window.outerWidth,
-    height = window.outerHeight;
+    width = svgComponent.width.baseVal.value,
+    height = svgComponent.height.baseVal.value;
 
   const simulation = D3.forceSimulation(state.nodes)
     .force(

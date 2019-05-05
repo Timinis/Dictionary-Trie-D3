@@ -159,4 +159,7 @@ export default (svgComponent, nodesArray, edgesArray, onLabels) => {
     2000,
     D3.now()
   );
+  if (nodesArray.length > 4) {
+    console.log('WOAH');
+  }
 };

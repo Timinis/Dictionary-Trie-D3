@@ -3,8 +3,8 @@ import svgMounter from './frontPageD3.js';
 
 class SvgComponent extends Component {
   componentDidMount = () => {
-    const nodesArray = [{ id: 'a' }, { id: 'b' }, { id: 'c' }, { id: 'd' }];
-    const edgesArray = [
+    let nodesArray = [{ id: 'a' }, { id: 'b' }, { id: 'c' }, { id: 'd' }];
+    let edgesArray = [
       { source: 'a', value: 1, target: 'b' },
       { source: 'a', value: 1, target: 'c' },
       { source: 'b', value: 1, target: 'c' },

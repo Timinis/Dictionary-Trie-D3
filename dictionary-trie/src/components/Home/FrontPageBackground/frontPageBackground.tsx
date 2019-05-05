@@ -7,6 +7,7 @@ class SvgComponent extends Component {
     const edgesArray = [
       { source: 'a', value: 1, target: 'b' },
       { source: 'a', value: 1, target: 'c' },
+      { source: 'b', value: 1, target: 'c' },
       { source: 'd', value: 1, target: 'b' }
     ];
     const svg = document.getElementById('directed-background');

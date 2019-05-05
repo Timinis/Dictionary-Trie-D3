@@ -21,21 +21,22 @@
       }
     }
     .loader__dot {
-      animation: 1s blink infinite;
+      animation: 2s blink infinite;
     }
     .loader__dot:nth-child(2) {
-      animation-delay: 250ms;
+      animation-delay: 500ms;
     }
     .loader__dot:nth-child(3) {
-      animation-delay: 500ms;
+      animation-delay: 1000ms;
     }
   }
   h2 {
     font-size: 18px;
     margin-bottom: 3vh;
   }
+
   button {
-    background-color: #9aced2; /* Green */
+    background-color: #00a594; /* Green */
     border: none;
     color: white;
     padding: 15px 32px;

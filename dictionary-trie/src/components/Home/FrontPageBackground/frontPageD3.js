@@ -39,7 +39,7 @@ export default (svgComponent, nodesArray, edgesArray, onLabels) => {
       .on('end', dragended);
   };
 
-  let themeColor = '#4D6E9B';
+  let themeColor = '#5B8BDA';
 
   let node = svg
     .append('g')
@@ -130,7 +130,7 @@ export default (svgComponent, nodesArray, edgesArray, onLabels) => {
 
   D3.interval(
     () => {
-      if (nodesArray.length < 30) {
+      if (nodesArray.length < 15) {
         let randomGenerated = Math.random().toString();
         let randomTarget = Math.floor(Math.random() * nodesArray.length) - 1;
         if (randomTarget === -1) {

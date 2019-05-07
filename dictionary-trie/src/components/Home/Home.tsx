@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import SvgBackground from './FrontPageBackground/frontPageBackground';
 import './Home.scss';
+import { Link } from 'react-router-dom';
 
 class Home extends Component {
   render() {
@@ -13,7 +14,9 @@ class Home extends Component {
             <span className="loader__dot">.</span>
           </h1>
           <h2>Data visualization learning tool</h2>
-          <button>Get Started</button>
+          <Link to="/grapher">
+            <button>Get Started</button>
+          </Link>
         </div>
         <SvgBackground />
       </div>

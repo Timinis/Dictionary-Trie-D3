@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import * as svgMounter from '../../../D3Mounter/D3Mounter';
 
-class SvgComponent extends Component {
+class SvgComponent extends Component<{}, { intervalId: number }> {
+  constructor(props: {}) {
+    super(props);
+    this.state = { intervalId: -1 };
+  }
   componentDidMount = () => {
     let nodesArray = [{ id: 'a' }, { id: 'b' }, { id: 'c' }, { id: 'd' }];
     let edgesArray = [
@@ -13,7 +17,7 @@ class SvgComponent extends Component {
     const svg = document.getElementById('directed-background');
     svgMounter.initializer(svg, nodesArray, edgesArray, false);
 
-    setInterval(() => {
+    const intervalId = window.setInterval(() => {
       if (nodesArray.length < 15) {
         let randomGenerated = Math.random().toString();
         let randomTarget = Math.floor(Math.random() * nodesArray.length) - 1;
@@ -44,10 +48,16 @@ class SvgComponent extends Component {
         svgMounter.updater(nodesArray, edgesArray);
       }
     }, 2000);
+
+    this.setState({ intervalId });
   };
 
   render() {
     return <svg id="directed-background" width="100vw" height="100vh" />;
+  }
+
+  componentWillUnmount() {
+    window.clearInterval(this.state.intervalId);
   }
 }
 

@@ -1,10 +1,39 @@
-import React, { Component } from 'react';
+import React, { Component, ChangeEvent } from 'react';
 import { connect } from 'react-redux';
 import * as Actions from './GrapherAction';
 import * as svgMounter from '../../D3Mounter/D3Mounter';
+import { Graph, isD3Source, isD3Target } from '../../sharedTypes';
 
-class Grapher extends Component {
-  constructor(props) {
+interface GrapherState {
+  node_id: string;
+  node_id_message: string;
+  edge_source: string;
+  edge_source_message: string;
+  edge_weight: number;
+  edge_weight_message: string;
+  edge_target: string;
+  edge_target_message: string;
+  node_form_visibility: boolean;
+  node_list_visibility: boolean;
+  edge_form_visibility: boolean;
+  edge_list_visibility: boolean;
+}
+
+interface GrapherStateProps {
+  graph: Graph;
+}
+interface GrapherDispatchProps {
+  addNode: (postdata: { id: string }) => void;
+  addEdge: (postdata: {
+    source: string;
+    value: number;
+    target: string;
+  }) => void;
+}
+type GrapherProps = GrapherStateProps & GrapherDispatchProps;
+
+class Grapher extends Component<GrapherProps, GrapherState> {
+  constructor(props: GrapherProps) {
     super(props);
     this.state = {
       node_id: '',
@@ -22,8 +51,11 @@ class Grapher extends Component {
     };
   }
 
+  componentWillReceiveProps(props: GrapherProps) {}
+
   componentDidMount = () => {
     const svg = document.getElementById('grapher');
+
     svgMounter.initializer(
       svg,
       this.props.graph.nodesArray,
@@ -31,15 +63,19 @@ class Grapher extends Component {
       true
     );
   };
-
-  handleChange = event => {
-    const { name, value } = event.target;
-    this.setState({
-      [name]: value
-    });
+  handleChange = (
+    event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>
+  ) => {
+    if (event.target !== null) {
+      const { name, value } = event.target;
+      this.setState({
+        [name]: value
+      } as any);
+    }
   };
 
-  nodeListVis = event => {
+  nodeListVis = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    //nodeListVis = (event: Event) => {
     event.preventDefault();
     if (!this.state.node_list_visibility) {
       this.setState({ node_list_visibility: true });
@@ -48,12 +84,12 @@ class Grapher extends Component {
     }
   };
 
-  nodeFormVis = event => {
+  nodeFormVis = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
     this.setState({ node_form_visibility: true });
   };
 
-  edgeListVis = event => {
+  edgeListVis = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
     if (!this.state.edge_list_visibility) {
       this.setState({ edge_list_visibility: true });
@@ -62,12 +98,14 @@ class Grapher extends Component {
     }
   };
 
-  edgeFormVis = event => {
+  edgeFormVis = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
     this.setState({ edge_form_visibility: true });
   };
 
-  handleNodeSubmit = event => {
+  handleNodeSubmit = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     event.preventDefault();
     const reducerData = this.props.graph.nodesArray;
     let uniqueId = new Set();
@@ -93,6 +131,7 @@ class Grapher extends Component {
       let postData = { id: this.state.node_id };
       this.props.addNode(postData);
       setTimeout(() => {
+        console.log(this.props.graph.nodesArray);
         svgMounter.updater(
           this.props.graph.nodesArray,
           this.props.graph.edgesArray
@@ -102,7 +141,9 @@ class Grapher extends Component {
     }
   };
 
-  handleEdgeSubmit = event => {
+  handleEdgeSubmit = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     event.preventDefault();
     console.log('clicked');
     this.setState({
@@ -116,7 +157,7 @@ class Grapher extends Component {
           'Please select a source node or create a node first'
       });
     }
-    if (this.state.edge_weight.length <= 0) {
+    if (this.state.edge_weight <= 0) {
       this.setState({
         edge_weight_message: 'Please enter a weight for the edge'
       });
@@ -154,7 +195,7 @@ class Grapher extends Component {
       <div>
         <div className="nodeArea">
           <h1>Nodes</h1>
-          <button onClick={this.nodeListVis}>
+          <button onClick={event => this.nodeListVis(event)}>
             {this.state.node_list_visibility ? 'Hide' : 'Expand'}
           </button>
 
@@ -169,7 +210,7 @@ class Grapher extends Component {
           <button onClick={this.nodeFormVis}>+</button>
           {this.state.node_form_visibility ? (
             <form>
-              <label type="node_id">Node</label>
+              <label htmlFor="node_id">Node</label>
               <input type="text" name="node_id" onChange={this.handleChange} />
 
               <p>{this.state.node_id_message}</p>
@@ -189,9 +230,14 @@ class Grapher extends Component {
               {this.props.graph.edgesArray.map((element, index) => {
                 return (
                   <div key={index}>
-                    <h2>Source Node: {element.source.id}</h2>
-                    <h2>Weight:{element.value}</h2>
-                    <h2>Target Node: {element.target.id}</h2>
+                    {isD3Source(element.source) &&
+                    isD3Target(element.target) ? (
+                      <>
+                        <h2>Source Node: {element.source.id}</h2>
+                        <h2>Weight:{element.value}</h2>
+                        <h2>Target Node: {element.target.id}</h2>
+                      </>
+                    ) : null}
                   </div>
                 );
               })}
@@ -202,24 +248,20 @@ class Grapher extends Component {
           <button onClick={this.edgeFormVis}>+</button>
           {this.state.edge_form_visibility ? (
             <form>
-              <label type="edge_source">Source Node</label>
-              <select
-                type="select"
-                name="edge_source"
-                onChange={this.handleChange}
-              >
+              <label htmlFor="edge_source">Source Node</label>
+              <select name="edge_source" onChange={this.handleChange}>
                 <option value="">Node Source</option>
                 {this.props.graph.nodesArray.map((element, index) => {
-                  return (
+                  return isD3Target(element) ? (
                     <option value={element.id} key={index}>
                       {element.id}
                     </option>
-                  );
+                  ) : null;
                 })}
               </select>
               <p>{this.state.edge_source_message}</p>
 
-              <label type="edge_weight">Edge Weight</label>
+              <label htmlFor="edge_weight">Edge Weight</label>
               <input
                 type="number"
                 name="edge_weight"
@@ -227,19 +269,15 @@ class Grapher extends Component {
                 onChange={this.handleChange}
               />
               <p>{this.state.edge_weight_message}</p>
-              <label type="edge_target">Target Node</label>
-              <select
-                type="select"
-                name="edge_target"
-                onChange={this.handleChange}
-              >
+              <label htmlFor="edge_target">Target Node</label>
+              <select name="edge_target" onChange={this.handleChange}>
                 <option value="">Node Target</option>
                 {this.props.graph.nodesArray.map((element, index) => {
-                  return (
+                  return isD3Target(element) ? (
                     <option value={element.id} key={index}>
                       {element.id}
                     </option>
-                  );
+                  ) : null;
                 })}
               </select>
               <p>{this.state.edge_target_message}</p>
@@ -256,11 +294,11 @@ class Grapher extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  graph: state.graph
+const mapStateToProps = (reducerState: Graph): GrapherStateProps => ({
+  graph: reducerState
 });
 
-const mapDispatchToProps = (dispatch, getState) => ({
+const mapDispatchToProps = (dispatch: any): GrapherDispatchProps => ({
   addNode: newNode => dispatch(Actions.nodeAdder(newNode)),
   addEdge: newEdge => dispatch(Actions.edgeAdder(newEdge))
 });

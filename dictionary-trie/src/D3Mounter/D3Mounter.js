@@ -145,6 +145,7 @@ const initializer = (svgComponent, nodesArray, edgesArray, onLabels) => {
 
 const updater = (nodesArray, edgesArray) => {
   state = { ...state, nodes: nodesArray, edges: edgesArray, needUpdate: true };
+  console.log('updater state', state);
 };
 
 export { initializer, updater };

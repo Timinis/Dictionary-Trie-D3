@@ -5,25 +5,15 @@ import Grapher from './components/Grapher/Grapher';
 import './reset.scss';
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      // What kind of inital state to we need?
-    };
-  }
-
   componentDidMount() {
-    document.title = 'Timothy Li- Interactive Media';
+    document.title = 'Graphalizer';
   }
 
   render() {
     return (
       <HashRouter>
-        <div>
-          <Route path="/" exact component={Home} />
-          <Route path="/grapher" exact component={Grapher} />
-        </div>
+        <Route path="/" exact component={Home} />
+        <Route path="/grapher" exact component={Grapher} />
       </HashRouter>
     );
   }

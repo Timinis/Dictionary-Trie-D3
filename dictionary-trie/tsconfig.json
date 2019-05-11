@@ -4,6 +4,7 @@
     "module": "esnext",
     "resolveJsonModule": true,
     "strict": true,
+    "strictNullChecks": true,
     "noImplicitAny": true,
     "esModuleInterop": true,
     "lib": ["dom", "dom.iterable", "esnext"],

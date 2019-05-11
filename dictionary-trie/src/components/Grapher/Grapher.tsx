@@ -1,8 +1,9 @@
 import React, { Component, ChangeEvent } from 'react';
 import { connect } from 'react-redux';
 import * as Actions from './GrapherAction';
-import * as svgMounter from '../../D3Mounter/D3Mounter';
-import { Graph, isD3Source, isD3Target } from '../../sharedTypes';
+import * as svgMounter from '../../D3Mounter/D3Mounter.js';
+import { Graph, isD3Source, isD3Target, Edge } from '../../sharedTypes';
+import * as D3 from 'd3';
 
 interface GrapherState {
   node_id: string;
@@ -17,6 +18,12 @@ interface GrapherState {
   node_list_visibility: boolean;
   edge_form_visibility: boolean;
   edge_list_visibility: boolean;
+  d3node: any;
+  d3link: any;
+  d3text: any;
+  d3Graph: any;
+  simulation: any;
+  drag: any;
 }
 
 interface GrapherStateProps {
@@ -33,6 +40,7 @@ interface GrapherDispatchProps {
 type GrapherProps = GrapherStateProps & GrapherDispatchProps;
 
 class Grapher extends Component<GrapherProps, GrapherState> {
+  myRef: React.RefObject<SVGSVGElement>;
   constructor(props: GrapherProps) {
     super(props);
     this.state = {
@@ -47,22 +55,85 @@ class Grapher extends Component<GrapherProps, GrapherState> {
       node_form_visibility: false,
       node_list_visibility: false,
       edge_form_visibility: false,
-      edge_list_visibility: false
+      edge_list_visibility: false,
+      d3node: null,
+      d3link: null,
+      d3text: null,
+      d3Graph: null,
+      simulation: null,
+      drag: null
     };
+    this.myRef = React.createRef<SVGSVGElement>();
   }
 
-  componentWillReceiveProps(props: GrapherProps) {}
-
   componentDidMount = () => {
-    const svg = document.getElementById('grapher');
+    if (this.myRef.current === null) return;
+    let copyNodes: Node[] = this.props.graph.nodesArray.map(element => {
+      return JSON.parse(JSON.stringify(element));
+    });
 
-    svgMounter.initializer(
-      svg,
-      this.props.graph.nodesArray,
-      this.props.graph.edgesArray,
-      true
+    let copyEdges: Edge[] = this.props.graph.edgesArray.map(element => {
+      return JSON.parse(JSON.stringify(element));
+    });
+
+    let d3Graph = D3.select(this.myRef.current);
+    let width = this.myRef.current.width.baseVal.value;
+    let height = this.myRef.current.height.baseVal.value;
+
+    const simulation = svgMounter.simulationCreator(
+      copyNodes,
+      copyEdges,
+      height,
+      width
     );
+
+    const drag = (simulation: any) => {
+      const dragstarted = (d: any) => {
+        if (!D3.event.active) simulation.alphaTarget(0.3).restart();
+        d.fx = d.x;
+        d.fy = d.y;
+      };
+
+      const dragged = (d: any) => {
+        d.fx = D3.event.x;
+        d.fy = D3.event.y;
+      };
+
+      const dragended = (d: any) => {
+        if (!D3.event.active) simulation.alphaTarget(0);
+        d.fx = null;
+        d.fy = null;
+      };
+
+      return D3.drag()
+        .on('start', dragstarted)
+        .on('drag', dragged)
+        .on('end', dragended);
+    };
+
+    let d3node = svgMounter.enterNode(
+      d3Graph,
+      copyNodes,
+      '#5B8BDA',
+      drag(simulation)
+    );
+
+    let d3link = svgMounter.enterLink(d3Graph, copyEdges);
+    let d3text = svgMounter.enterText(d3Graph, copyNodes);
+    this.setState({ d3node, d3text, d3link, d3Graph, drag, simulation });
+
+    simulation.on('tick', () => {
+      d3node.attr('cx', (d: any) => d.x).attr('cy', (d: any) => d.y);
+      d3text.attr('x', (d: any) => d.x + 10).attr('dy', (d: any) => d.y);
+
+      d3link
+        .attr('x1', (d: any) => d.source.x)
+        .attr('y1', (d: any) => d.source.y)
+        .attr('x2', (d: any) => d.target.x)
+        .attr('y2', (d: any) => d.target.y);
+    });
   };
+
   handleChange = (
     event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>
   ) => {
@@ -75,7 +146,6 @@ class Grapher extends Component<GrapherProps, GrapherState> {
   };
 
   nodeListVis = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    //nodeListVis = (event: Event) => {
     event.preventDefault();
     if (!this.state.node_list_visibility) {
       this.setState({ node_list_visibility: true });
@@ -121,23 +191,56 @@ class Grapher extends Component<GrapherProps, GrapherState> {
       this.setState({
         node_id_message: 'Empty field, please enter information'
       });
-    }
-    if (uniqueId.has(this.state.node_id)) {
+    } else if (uniqueId.has(this.state.node_id)) {
       this.setState({
         node_id_message: 'ID already taken, please set a new ID'
       });
-    }
-    if (this.state.node_id.length > 0 && !uniqueId.has(this.state.node_id)) {
+    } else if (
+      this.state.node_id.length > 0 &&
+      !uniqueId.has(this.state.node_id)
+    ) {
       let postData = { id: this.state.node_id };
       this.props.addNode(postData);
-      setTimeout(() => {
-        console.log(this.props.graph.nodesArray);
-        svgMounter.updater(
-          this.props.graph.nodesArray,
-          this.props.graph.edgesArray
+
+      this.setState({ node_form_visibility: false }, () => {
+        let copyNodes: Node[] = this.props.graph.nodesArray.map(element => {
+          return JSON.parse(JSON.stringify(element));
+        });
+
+        let copyEdges: Edge[] = this.props.graph.edgesArray.map(element => {
+          return JSON.parse(JSON.stringify(element));
+        });
+        let d3Graph = D3.select(this.myRef.current);
+        let d3node = d3Graph.selectAll('.node');
+        let d3text = d3Graph.selectAll('.desc');
+
+        let d3link = d3Graph.selectAll('.link');
+        let newGraphSelection = svgMounter.restartGraph(
+          this.state.d3node,
+          copyNodes,
+          '#5B8BDA',
+          this.state.drag(this.state.simulation),
+          this.state.d3link,
+          copyEdges,
+          this.state.d3text,
+          this.state.simulation
         );
-      }, 2);
-      this.setState({ node_form_visibility: false });
+        d3node = newGraphSelection.nodeSelection;
+        d3text = newGraphSelection.textSelection;
+        d3link = newGraphSelection.linkSelection;
+
+        this.state.simulation.on('tick', () => {
+          d3node.attr('cx', (d: any) => d.x).attr('cy', (d: any) => d.y);
+          d3text.attr('x', (d: any) => d.x + 10).attr('dy', (d: any) => d.y);
+
+          d3link
+            .attr('x1', (d: any) => d.source.x)
+            .attr('y1', (d: any) => d.source.y)
+            .attr('x2', (d: any) => d.target.x)
+            .attr('y2', (d: any) => d.target.y);
+        });
+        this.setState({ d3link, d3node, d3text });
+      });
     }
   };
 
@@ -178,15 +281,50 @@ class Grapher extends Component<GrapherProps, GrapherState> {
         value: this.state.edge_weight,
         target: this.state.edge_target
       };
-      console.log(postData);
+
       this.props.addEdge(postData);
-      setTimeout(() => {
-        svgMounter.updater(
-          this.props.graph.nodesArray,
-          this.props.graph.edgesArray
+
+      this.setState({ edge_form_visibility: false }, () => {
+        let copyNodes: Node[] = this.props.graph.nodesArray.map(element => {
+          return JSON.parse(JSON.stringify(element));
+        });
+
+        let copyEdges: Edge[] = this.props.graph.edgesArray.map(element => {
+          return JSON.parse(JSON.stringify(element));
+        });
+        let d3Graph = D3.select(this.myRef.current);
+
+        let d3node = d3Graph.selectAll('.node');
+        let d3text = d3Graph.selectAll('.desc');
+
+        let d3link = d3Graph.selectAll('.link');
+        let newGraphSelection = svgMounter.restartGraph(
+          this.state.d3node,
+          copyNodes,
+          '#5B8BDA',
+          this.state.drag(this.state.simulation),
+          this.state.d3link,
+          copyEdges,
+          this.state.d3text,
+          this.state.simulation
         );
-      }, 2);
-      this.setState({ edge_form_visibility: false });
+        d3node = newGraphSelection.nodeSelection;
+        d3text = newGraphSelection.textSelection;
+        d3link = newGraphSelection.linkSelection;
+        console.log(d3link);
+        this.state.simulation.on('tick', () => {
+          d3node.attr('cx', (d: any) => d.x).attr('cy', (d: any) => d.y);
+          d3text.attr('x', (d: any) => d.x + 10).attr('dy', (d: any) => d.y);
+
+          d3link
+            .attr('x1', (d: any) => d.source.x)
+            .attr('y1', (d: any) => d.source.y)
+            .attr('x2', (d: any) => d.target.x)
+            .attr('y2', (d: any) => d.target.y);
+        });
+
+        this.setState({ d3link, d3node, d3text });
+      });
     }
   };
 
@@ -288,7 +426,7 @@ class Grapher extends Component<GrapherProps, GrapherState> {
           ) : null}
         </div>
 
-        <svg id="grapher" width="60vw" height="100vh" />
+        <svg ref={this.myRef} width="60vw" height="100vh" />
       </div>
     );
   }

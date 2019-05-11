@@ -1,7 +1,9 @@
-export interface Node {
+import * as D3 from 'd3';
+
+export interface Node extends D3.SimulationNodeDatum {
   id: string | D3Source;
 }
-export interface Edge {
+export interface Edge extends D3.SimulationLinkDatum<Node> {
   source: string | D3Source;
   value: number;
   target: string | D3Target;

@@ -1,19 +1,8 @@
 import { Graph, Edge, Node } from '../../sharedTypes';
 
 let initialState: Graph = {
-  nodesArray: [
-    { id: 'a' },
-    { id: 'p1' },
-    { id: 'p2' },
-    { id: 'l' },
-    { id: 'e' }
-  ],
-  edgesArray: [
-    { source: 'a', value: 1, target: 'p1' },
-    { source: 'p1', value: 1, target: 'p2' },
-    { source: 'p2', value: 1, target: 'l' },
-    { source: 'l', value: 1, target: 'e' }
-  ]
+  nodesArray: [],
+  edgesArray: []
 };
 
 type Action =

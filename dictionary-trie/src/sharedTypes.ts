@@ -3,6 +3,13 @@ import * as D3 from 'd3';
 export interface Node extends D3.SimulationNodeDatum {
   id: string | D3Source;
 }
+
+export interface ClusterNode extends D3.SimulationNodeDatum {
+  id: string | D3Source;
+  radius: number;
+  color: string;
+}
+
 export interface Edge extends D3.SimulationLinkDatum<Node> {
   source: string | D3Source;
   value: number;

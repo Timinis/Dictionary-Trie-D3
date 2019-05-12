@@ -1,19 +1,5 @@
 import * as D3 from 'd3';
 
-// let updaterIsCalled = false;
-// let newState;
-// let resetState = false;
-
-// const D3EnvironmentSetter = (SvgComponent, reactGraph, labelsSetting) => {
-//   let environmentState = { ...reactGraph, needsUpdate: false };
-//   initializer(SvgComponent, environmentState, labelsSetting);
-//   window.setInterval(() => {
-//     if (updaterIsCalled) {
-//       environmentState =
-//     }
-//   });
-// };
-
 const simulationCreator = (inputNodeArr, inputEdgesArr, height, width) => {
   return D3.forceSimulation(inputNodeArr)
     .force(
@@ -23,7 +9,7 @@ const simulationCreator = (inputNodeArr, inputEdgesArr, height, width) => {
         .id(d => d.id)
     )
     .force('charge', D3.forceManyBody())
-    .force('collision', D3.forceCollide().radius(d => d.r + 10))
+    .force('collision', D3.forceCollide().radius(10))
     .force('center', D3.forceCenter(width * 0.6, height / 2));
 };
 
@@ -54,10 +40,6 @@ const enterText = (selection, inputNodesArray) => {
     });
 };
 
-const updateNode = selection => {
-  selection.attr('transform', d => 'translate(' + d.x + ',' + d.y + ')');
-};
-
 const enterLink = (selection, inputEdgesArray) => {
   return selection
     .classed('link', true)
@@ -76,11 +58,6 @@ const updateLink = selection => {
     .attr('y1', d => d.source.y)
     .attr('x2', d => d.target.x)
     .attr('y2', d => d.target.y);
-};
-
-const updateGraph = selection => {
-  selection.selectAll('.node').call(updateNode);
-  selection.selectAll('.link').call(updateLink);
 };
 
 const restartGraph = (
@@ -262,10 +239,8 @@ const restartGraph = (
 
 export {
   enterNode,
-  updateNode,
   enterLink,
   updateLink,
-  updateGraph,
   enterText,
   restartGraph,
   simulationCreator

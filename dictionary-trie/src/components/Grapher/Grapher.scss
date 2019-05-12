@@ -1,0 +1,184 @@
+.controlPanel {
+  width: 35vw;
+  height: 90vh;
+  position: relative;
+  float: right;
+  background-color: #f9f9f9;
+  border-left: 1px solid #ebebeb;
+  color: #404040;
+  font-family: 'Courier New', Courier, monospace;
+  overflow: scroll;
+
+  .nodeArea {
+    position: relative;
+    top: 3vh;
+    left: 2vw;
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 18vh;
+    h1 {
+      font-weight: bold;
+      font-size: 45px;
+
+      margin-bottom: 1vh;
+      margin-right: 5vw;
+    }
+    .list-cards {
+      display: flex;
+      flex-wrap: wrap;
+
+      margin-bottom: 1vh;
+      box-shadow: 0 2px 2px 0px rgba(0, 0, 0, 0.1);
+      background-color: white;
+      padding: 20px;
+      width: 28vw;
+      img {
+        width: 3vw;
+        height: 3vw;
+      }
+      li {
+        font-size: 25px;
+        font-weight: bold;
+        position: relative;
+        top: 1vh;
+        left: 5vw;
+        color: #404040;
+      }
+    }
+    form {
+      box-shadow: 0 2px 2px 0px rgba(0, 0, 0, 0.1);
+      width: 28vw;
+      background-color: white;
+      padding: 20px;
+      label {
+        font-size: 18px;
+        font-weight: bold;
+        display: block;
+      }
+      input {
+        height: 2vh;
+        width: 28vw;
+        border-radius: 3px;
+        margin-bottom: 4vh;
+      }
+      input:focus {
+        outline: none;
+      }
+    }
+    button {
+      font-family: 'Courier New', Courier, monospace;
+      position: relative;
+      top: 1vh;
+      border: none;
+      outline: none;
+      background-color: #f9f9f9;
+      margin-right: 3vw;
+      text-align: center;
+      height: 5vh;
+      width: 6vw;
+      font-weight: bold;
+      color: #404040;
+    }
+    button:hover {
+      font-family: 'Courier New', Courier, monospace;
+      border: none;
+      outline: none;
+      background-color: #acacac;
+    }
+  }
+  .edgeArea {
+    position: relative;
+    top: 3vh;
+    left: 2vw;
+    display: flex;
+    flex-wrap: wrap;
+    h1 {
+      font-weight: bold;
+      font-size: 45px;
+
+      margin-bottom: 1vh;
+      margin-right: 5vw;
+    }
+    .edge-list {
+      display: flex;
+      flex-wrap: wrap;
+      text-align: left;
+      margin-bottom: 1vh;
+      box-shadow: 0 2px 2px 0px rgba(0, 0, 0, 0.1);
+      background-color: white;
+      padding: 20px;
+      width: 28vw;
+      img {
+        position: relative;
+        top: 1vh;
+        width: 4vw;
+        height: 4vw;
+      }
+      .edge-info {
+        display: block;
+        h2 {
+          font-size: 25px;
+          font-weight: bold;
+          position: relative;
+
+          left: 5vw;
+          color: #404040;
+        }
+      }
+    }
+    form {
+      box-shadow: 0 2px 2px 0px rgba(0, 0, 0, 0.1);
+      width: 28vw;
+      background-color: white;
+      padding: 20px;
+      label {
+        font-size: 18px;
+        font-weight: bold;
+        display: block;
+      }
+      select {
+        margin-bottom: 4vh;
+        height: 3vh;
+        width: 28.5vw;
+        border-radius: 2px;
+        box-shadow: 0 2px 2px 0px rgba(0, 0, 0, 0.1);
+      }
+      input {
+        height: 2vh;
+        width: 28vw;
+        border-radius: 3px;
+        margin-bottom: 4vh;
+      }
+      input:focus {
+        outline: none;
+      }
+      select:focus {
+        outline: none;
+      }
+      button {
+        font-size: 13px;
+        background-color: white;
+      }
+    }
+    button {
+      font-family: 'Courier New', Courier, monospace;
+      position: relative;
+      top: 1vh;
+      border: none;
+      outline: none;
+      background-color: #f9f9f9;
+      margin-right: 3vw;
+      text-align: center;
+      height: 5vh;
+      width: 6vw;
+      font-weight: bold;
+      color: #404040;
+    }
+    button:hover {
+      font-family: 'Courier New', Courier, monospace;
+      border: none;
+      outline: none;
+      background-color: #acacac;
+    }
+  }
+}

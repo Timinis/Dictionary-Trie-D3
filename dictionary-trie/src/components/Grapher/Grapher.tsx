@@ -3,7 +3,12 @@ import { connect } from 'react-redux';
 import * as Actions from './GrapherAction';
 import * as svgMounter from '../../D3Mounter/D3Mounter.js';
 import { Graph, isD3Source, isD3Target, Edge } from '../../sharedTypes';
+import nodeIMG from '../../assets/node.png';
+import edgeIMG from '../../assets/edge.jpg';
 import * as D3 from 'd3';
+import NavBar from '../Navbar/Navbar';
+
+import './Grapher.scss';
 
 interface GrapherState {
   node_id: string;
@@ -77,6 +82,7 @@ class Grapher extends Component<GrapherProps, GrapherState> {
     });
 
     let d3Graph = D3.select(this.myRef.current);
+    console.log(d3Graph);
     let width = this.myRef.current.width.baseVal.value;
     let height = this.myRef.current.height.baseVal.value;
 
@@ -156,7 +162,11 @@ class Grapher extends Component<GrapherProps, GrapherState> {
 
   nodeFormVis = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
-    this.setState({ node_form_visibility: true });
+    if (!this.state.node_form_visibility) {
+      this.setState({ node_form_visibility: true });
+    } else {
+      this.setState({ node_form_visibility: false });
+    }
   };
 
   edgeListVis = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -170,7 +180,11 @@ class Grapher extends Component<GrapherProps, GrapherState> {
 
   edgeFormVis = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
-    this.setState({ edge_form_visibility: true });
+    if (!this.state.edge_form_visibility) {
+      this.setState({ edge_form_visibility: true });
+    } else {
+      this.setState({ edge_form_visibility: false });
+    }
   };
 
   handleNodeSubmit = (
@@ -329,104 +343,113 @@ class Grapher extends Component<GrapherProps, GrapherState> {
   };
 
   render() {
+    console.log(this.props.graph.edgesArray);
     return (
       <div>
-        <div className="nodeArea">
-          <h1>Nodes</h1>
-          <button onClick={event => this.nodeListVis(event)}>
-            {this.state.node_list_visibility ? 'Hide' : 'Expand'}
-          </button>
+        <NavBar />
 
-          {this.state.node_list_visibility ? (
-            <ul>
-              {this.props.graph.nodesArray.map((element, index) => {
-                return <li key={index}>Node: {element.id}</li>;
-              })}
-            </ul>
-          ) : null}
-
-          <button onClick={this.nodeFormVis}>+</button>
-          {this.state.node_form_visibility ? (
-            <form>
-              <label htmlFor="node_id">Node</label>
-              <input type="text" name="node_id" onChange={this.handleChange} />
-
-              <p>{this.state.node_id_message}</p>
-              <button type="submit" onClick={this.handleNodeSubmit}>
-                Create Node
-              </button>
-            </form>
-          ) : null}
-        </div>
-        <div className="edgeArea">
-          <h1>Edges</h1>
-          <button onClick={this.edgeListVis}>
-            {this.state.edge_list_visibility ? 'Hide' : 'Expand'}
-          </button>
-          {this.state.edge_list_visibility ? (
-            <div className="edgeList">
-              {this.props.graph.edgesArray.map((element, index) => {
-                return (
-                  <div key={index}>
-                    {isD3Source(element.source) &&
-                    isD3Target(element.target) ? (
-                      <>
-                        <h2>Source Node: {element.source.id}</h2>
-                        <h2>Weight:{element.value}</h2>
-                        <h2>Target Node: {element.target.id}</h2>
-                      </>
-                    ) : null}
-                  </div>
-                );
-              })}
-              }
-            </div>
-          ) : null}
-
-          <button onClick={this.edgeFormVis}>+</button>
-          {this.state.edge_form_visibility ? (
-            <form>
-              <label htmlFor="edge_source">Source Node</label>
-              <select name="edge_source" onChange={this.handleChange}>
-                <option value="">Node Source</option>
+        <svg ref={this.myRef} width="65vw" height="90vh" />
+        <div className="controlPanel">
+          <div className="nodeArea">
+            <h1>nodes</h1>
+            <button onClick={event => this.nodeListVis(event)}>
+              {this.state.node_list_visibility ? 'hide list' : 'expand list'}
+            </button>
+            <button onClick={this.nodeFormVis}>add a node</button>
+            {this.state.node_list_visibility ? (
+              <ul>
                 {this.props.graph.nodesArray.map((element, index) => {
-                  return isD3Target(element) ? (
-                    <option value={element.id} key={index}>
-                      {element.id}
-                    </option>
-                  ) : null;
+                  return (
+                    <div className="list-cards">
+                      <img src={nodeIMG} />
+                      <li key={index}>node {element.id}</li>
+                    </div>
+                  );
                 })}
-              </select>
-              <p>{this.state.edge_source_message}</p>
+              </ul>
+            ) : null}
 
-              <label htmlFor="edge_weight">Edge Weight</label>
-              <input
-                type="number"
-                name="edge_weight"
-                min="0"
-                onChange={this.handleChange}
-              />
-              <p>{this.state.edge_weight_message}</p>
-              <label htmlFor="edge_target">Target Node</label>
-              <select name="edge_target" onChange={this.handleChange}>
-                <option value="">Node Target</option>
-                {this.props.graph.nodesArray.map((element, index) => {
-                  return isD3Target(element) ? (
-                    <option value={element.id} key={index}>
-                      {element.id}
-                    </option>
-                  ) : null;
+            {this.state.node_form_visibility ? (
+              <form>
+                <label htmlFor="node_id">node name</label>
+                <input
+                  type="text"
+                  name="node_id"
+                  onChange={this.handleChange}
+                />
+
+                <p>{this.state.node_id_message}</p>
+                <button type="submit" onClick={this.handleNodeSubmit}>
+                  create node
+                </button>
+              </form>
+            ) : null}
+          </div>
+          <div className="edgeArea">
+            <h1>edges</h1>
+            <button onClick={this.edgeListVis}>
+              {this.state.edge_list_visibility ? 'hide list' : 'expand list'}
+            </button>
+            <button onClick={this.edgeFormVis}>add edge</button>
+            {this.state.edge_list_visibility ? (
+              <div className="edgeList">
+                {this.props.graph.edgesArray.map((element, index) => {
+                  return (
+                    <div key={index} className="edge-list">
+                      <img src={edgeIMG} />
+                      <div className="edge-info">
+                        <h2>source node: {element.source}</h2>
+                        <h2>weight of edge:{element.value}</h2>
+                        <h2>target node: {element.target}</h2>
+                      </div>
+                    </div>
+                  );
                 })}
-              </select>
-              <p>{this.state.edge_target_message}</p>
-              <button type="submit" onClick={this.handleEdgeSubmit}>
-                Create Edge
-              </button>
-            </form>
-          ) : null}
+              </div>
+            ) : null}
+
+            {this.state.edge_form_visibility ? (
+              <form>
+                <label htmlFor="edge_source">source node</label>
+                <select name="edge_source" onChange={this.handleChange}>
+                  <option value="">Source Node</option>
+                  {this.props.graph.nodesArray.map((element, index) => {
+                    return isD3Target(element) ? (
+                      <option value={element.id} key={index}>
+                        {element.id}
+                      </option>
+                    ) : null;
+                  })}
+                </select>
+                <p>{this.state.edge_source_message}</p>
+
+                <label htmlFor="edge_weight">edge thickness</label>
+                <input
+                  type="number"
+                  name="edge_weight"
+                  min="0"
+                  onChange={this.handleChange}
+                />
+                <p>{this.state.edge_weight_message}</p>
+                <label htmlFor="edge_target">target node</label>
+                <select name="edge_target" onChange={this.handleChange}>
+                  <option value="">Node Target</option>
+                  {this.props.graph.nodesArray.map((element, index) => {
+                    return isD3Target(element) ? (
+                      <option value={element.id} key={index}>
+                        {element.id}
+                      </option>
+                    ) : null;
+                  })}
+                </select>
+                <p>{this.state.edge_target_message}</p>
+                <button type="submit" onClick={this.handleEdgeSubmit}>
+                  Create Edge
+                </button>
+              </form>
+            ) : null}
+          </div>
         </div>
-
-        <svg ref={this.myRef} width="60vw" height="100vh" />
       </div>
     );
   }

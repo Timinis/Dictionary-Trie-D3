@@ -88,6 +88,25 @@ class NavBar extends Component<{}, { intervalId: number; d3Timer?: D3.Timer }> {
             <span className="loader__dot">.</span>
           </h1>
         </Link>
+        <Link to="/grapher">
+          <h3>
+            Graphing Field<span className="loader__dot">.</span>
+            <span className="loader__dot">.</span>
+            <span className="loader__dot">.</span>
+          </h3>
+        </Link>
+        <Link to="/gdp">
+          <h2>
+            Samples<span className="loader__dot">.</span>
+            <span className="loader__dot">.</span>
+            <span className="loader__dot">.</span>
+          </h2>
+        </Link>
+        <h4>
+          About Me<span className="loader__dot">.</span>
+          <span className="loader__dot">.</span>
+          <span className="loader__dot">.</span>
+        </h4>
         <svg ref={this.myRef} width="15vw" height="10vh" className="navsvg">
           <rect width="100%" height="100%" fill="#f8f8ff" />
         </svg>

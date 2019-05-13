@@ -29,4 +29,76 @@
       animation-delay: 1000ms;
     }
   }
+  h2 {
+    top: 3.5vh;
+    right: 8vw;
+    z-index: 4;
+    position: absolute;
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 5vh;
+    @keyframes blink {
+      50% {
+        color: transparent;
+      }
+    }
+    .loader__dot {
+      animation: 2s blink infinite;
+    }
+    .loader__dot:nth-child(2) {
+      animation-delay: 500ms;
+    }
+    .loader__dot:nth-child(3) {
+      animation-delay: 1000ms;
+    }
+    color: #404040;
+  }
+  h3 {
+    top: 3.5vh;
+    left: 30vw;
+    z-index: 4;
+    position: absolute;
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 5vh;
+    @keyframes blink {
+      50% {
+        color: transparent;
+      }
+    }
+    .loader__dot {
+      animation: 2s blink infinite;
+    }
+    .loader__dot:nth-child(2) {
+      animation-delay: 500ms;
+    }
+    .loader__dot:nth-child(3) {
+      animation-delay: 1000ms;
+    }
+    color: #404040;
+  }
+  h4 {
+    top: 3.5vh;
+    right: 32vw;
+    z-index: 4;
+    position: absolute;
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 5vh;
+    @keyframes blink {
+      50% {
+        color: transparent;
+      }
+    }
+    .loader__dot {
+      animation: 2s blink infinite;
+    }
+    .loader__dot:nth-child(2) {
+      animation-delay: 500ms;
+    }
+    .loader__dot:nth-child(3) {
+      animation-delay: 1000ms;
+    }
+    color: #404040;
+  }
 }

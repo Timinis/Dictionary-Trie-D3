@@ -5,7 +5,7 @@ const simulationCreator = (inputNodeArr, inputEdgesArr, height, width) => {
     .force(
       'link',
       D3.forceLink(inputEdgesArr)
-        .distance(width / 20)
+        .distance(d => d.value * 70)
         .id(d => d.id)
     )
     .force('charge', D3.forceManyBody())
@@ -49,7 +49,7 @@ const enterLink = (selection, inputEdgesArray) => {
     .selectAll('line')
     .data(inputEdgesArray)
     .join('line')
-    .attr('stroke-width', d => Math.sqrt(d.value));
+    .attr('stroke-width', 1);
 };
 
 const updateLink = selection => {

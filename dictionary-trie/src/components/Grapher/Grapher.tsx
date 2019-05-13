@@ -207,7 +207,7 @@ class Grapher extends Component<GrapherProps, GrapherState> {
       });
     } else if (uniqueId.has(this.state.node_id)) {
       this.setState({
-        node_id_message: 'ID already taken, please set a new ID'
+        node_id_message: 'Name already taken, please set a new ID'
       });
     } else if (
       this.state.node_id.length > 0 &&
@@ -423,7 +423,7 @@ class Grapher extends Component<GrapherProps, GrapherState> {
                 </select>
                 <p>{this.state.edge_source_message}</p>
 
-                <label htmlFor="edge_weight">edge thickness</label>
+                <label htmlFor="edge_weight">edge length</label>
                 <input
                   type="number"
                   name="edge_weight"

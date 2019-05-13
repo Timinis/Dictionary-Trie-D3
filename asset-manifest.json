@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/Dictionary-Trie-D3/static/css/main.9b1fad16.chunk.css",
-    "main.js": "/Dictionary-Trie-D3/static/js/main.f74f0781.chunk.js",
-    "main.js.map": "/Dictionary-Trie-D3/static/js/main.f74f0781.chunk.js.map",
+    "main.css": "/Dictionary-Trie-D3/static/css/main.b31b28d9.chunk.css",
+    "main.js": "/Dictionary-Trie-D3/static/js/main.14315670.chunk.js",
+    "main.js.map": "/Dictionary-Trie-D3/static/js/main.14315670.chunk.js.map",
     "runtime~main.js": "/Dictionary-Trie-D3/static/js/runtime~main.25e4b857.js",
     "runtime~main.js.map": "/Dictionary-Trie-D3/static/js/runtime~main.25e4b857.js.map",
-    "static/js/2.6aaa61b9.chunk.js": "/Dictionary-Trie-D3/static/js/2.6aaa61b9.chunk.js",
-    "static/js/2.6aaa61b9.chunk.js.map": "/Dictionary-Trie-D3/static/js/2.6aaa61b9.chunk.js.map",
+    "static/js/2.13d90297.chunk.js": "/Dictionary-Trie-D3/static/js/2.13d90297.chunk.js",
+    "static/js/2.13d90297.chunk.js.map": "/Dictionary-Trie-D3/static/js/2.13d90297.chunk.js.map",
     "index.html": "/Dictionary-Trie-D3/index.html",
-    "precache-manifest.658348f520575bcbff124091f702f525.js": "/Dictionary-Trie-D3/precache-manifest.658348f520575bcbff124091f702f525.js",
+    "precache-manifest.836b075c2a3ce6b72a0e2f0b2c366410.js": "/Dictionary-Trie-D3/precache-manifest.836b075c2a3ce6b72a0e2f0b2c366410.js",
     "service-worker.js": "/Dictionary-Trie-D3/service-worker.js",
-    "static/css/main.9b1fad16.chunk.css.map": "/Dictionary-Trie-D3/static/css/main.9b1fad16.chunk.css.map",
+    "static/css/main.b31b28d9.chunk.css.map": "/Dictionary-Trie-D3/static/css/main.b31b28d9.chunk.css.map",
     "static/media/edge.jpg": "/Dictionary-Trie-D3/static/media/edge.871ac98d.jpg",
     "static/media/node.png": "/Dictionary-Trie-D3/static/media/node.551d9315.png"
   }

@@ -1,22 +1,32 @@
-let initialState: any = {
+import { Graph, Edge, Node } from '../../sharedTypes';
+
+let initialState: Graph = {
   nodesArray: [],
   edgesArray: []
 };
 
-export default (state = initialState, action: any) => {
-  let { type, payload } = action;
-
-  switch (type) {
-    case 'DICTIONARYADDNODE':
+type Action =
+  | {
+      type: ActionTypes.DictionaryAddEdge;
+      payload: Edge;
+    }
+  | { type: ActionTypes.DictionaryAddNode; payload: Node };
+enum ActionTypes {
+  DictionaryAddNode = 'DICTIONARYADDNODE',
+  DictionaryAddEdge = 'DICTIONARYADDEDGE'
+}
+export default (state = initialState, action: Action): Graph => {
+  switch (action.type) {
+    case ActionTypes.DictionaryAddNode:
       return {
         ...state,
-        nodesArray: [...state.nodesArray, payload]
+        nodesArray: [...state.nodesArray, action.payload]
       };
-    case 'DICTIONARYADDEDGE':
-      console.log(payload);
+
+    case ActionTypes.DictionaryAddEdge:
       return {
         ...state,
-        edgesArray: [...state.edgesArray, payload]
+        edgesArray: [...state.edgesArray, action.payload]
       };
 
     default:

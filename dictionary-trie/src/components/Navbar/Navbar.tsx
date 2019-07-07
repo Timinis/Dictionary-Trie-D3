@@ -23,8 +23,6 @@ class NavBar extends Component<{}, { intervalId: number; d3Timer?: D3.Timer }> {
       });
     }
 
-    console.log(nodesArray);
-
     let copyNodes: Node[] = nodesArray.map(element => {
       return JSON.parse(JSON.stringify(element));
     });
@@ -95,7 +93,7 @@ class NavBar extends Component<{}, { intervalId: number; d3Timer?: D3.Timer }> {
             <span className="loader__dot">.</span>
           </h3>
         </Link>
-        <Link to="/gdp">
+        <Link to="/examples">
           <h2>
             Samples<span className="loader__dot">.</span>
             <span className="loader__dot">.</span>

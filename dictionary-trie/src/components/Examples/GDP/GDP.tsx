@@ -1,8 +1,8 @@
 import React, { Component, ReactSVGElement } from 'react';
 import * as D3 from 'd3';
-import countryJSON from '../../assets/country.json';
-import gdpJSON from '../../assets/gdp.json';
-import Navbar from '../Navbar/Navbar';
+import countryJSON from '../../../assets/country.json';
+import gdpJSON from '../../../assets/gdp.json';
+import Navbar from '../../Navbar/Navbar';
 import './GDP.scss';
 
 class GDPSvg extends Component<{}> {

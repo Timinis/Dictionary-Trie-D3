@@ -221,6 +221,8 @@ class Grapher extends Component<GrapherProps, GrapherState> {
           return JSON.parse(JSON.stringify(element));
         });
 
+        console.log(copyNodes, 'part of me');
+
         let copyEdges: Edge[] = this.props.graph.edgesArray.map(element => {
           return JSON.parse(JSON.stringify(element));
         });

@@ -1,39 +1,53 @@
 import dictionary from '../assets/dictionary.json';
 
-//this section is to keep the dictionary's list of words and their definitions
+// //this section is to keep the dictionary's list of words and their definitions
 
 let dictionaryWords = Object.keys(dictionary).sort();
 
-//this is a function that creates an empty trie
-const trieInitializer = () => {
-  let dictionaryTrie = { value: '*', completed: false };
-  return dictionaryTrie;
+//Trie is built in the form of graphs, the node :string and edges :string[]
+
+const createTrie = (filteredWord: string[]): Map<string, string[]> => {
+  let trie: Map<string, string[]> = new Map();
+
+  filteredWord.forEach(word => {
+    for (let i = 0; i < word.length; i++) {
+      const letterAndIndex = `${word[i].toUpperCase()} ${i}`;
+      const nextWord = `${word[i + 1]} ${i + 1}`;
+      if (!trie.has(letterAndIndex)) {
+        if (!word[i + 1]) {
+          trie.set(letterAndIndex, []);
+        } else {
+          trie.set(letterAndIndex, [nextWord.toUpperCase()]);
+        }
+      } else if (trie.has(letterAndIndex)) {
+        let edgeList = trie.get(letterAndIndex);
+
+        if (word[i + 1]) {
+          //@ts-ignore
+          if (!edgeList.includes(nextWord)) {
+            trie.set(letterAndIndex, [...edgeList, nextWord.toUpperCase()]);
+          }
+        } else {
+          //@ts-ignore
+
+          trie.set(letterAndIndex, [...edgeList]);
+        }
+      }
+    }
+  });
+  return trie;
 };
 
-//this function will take in a string and add to the trie
+const searchWord = (word: string): string[] => {
+  const filteredWords = dictionaryWords.filter(element => {
+    return element.startsWith(word);
+  });
 
-const trieFiller = (word: string, trie: any, counter: number = 0) => {
-  console.log(word);
-  if (!trie.value) {
-    trie.value = word[counter - 1];
-  }
-  if (!trie[word[counter]]) {
-    trie[word[counter]] = { completed: false, value: null };
-  }
-  counter++;
-  if (counter === word.length) {
-    trie[word[counter - 1]].completed = true;
-    return;
-  }
-  trieFiller(word, trie[word[counter - 1]], counter);
+  filteredWords.sort((a, b) => {
+    return a.length - b.length;
+  });
+
+  return filteredWords;
 };
 
-let newTrie = trieInitializer();
-
-dictionaryWords.forEach(words => {
-  if (words[0] + words[1] === 're') {
-    trieFiller(words, newTrie);
-  }
-});
-
-export default newTrie;
+export { createTrie, searchWord };
